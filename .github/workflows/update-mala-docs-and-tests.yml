@@ -20,7 +20,7 @@ jobs:
         run: |
           git clone \
             --depth=1 \
-            --branch=main \
+            --branch=develop \
             https://github-actions[bot]:${{ secrets.TEST_DATA_PAT }}@github.com/pcagas/mala.git
 
           cd mala
