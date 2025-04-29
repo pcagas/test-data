@@ -18,7 +18,11 @@ jobs:
       # Step 2: Clone the target repository
       - name: Clone target repository
         run: |
-          git clone https://github.com/pcagas/mala.git
+          git clone \
+            --depth=1 \
+            --branch=main \
+            https://github-actions[bot]:${{ secrets.TEST_DATA_PAT }}@github.com/pcagas/mala.git
+
           cd mala
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -26,18 +30,11 @@ jobs:
           BRANCH_NAME="update-test-data-version-${{ github.event.release.tag_name }}"
           git checkout -b $BRANCH_NAME
 
-      # Step 3: Make changes (e.g., update a file with the new release version)
-      - name: Update version
-        run: |
           echo "New release version: ${{ github.event.release.tag_name }}" > version.txt
           git add version.txt
           git commit -m "Update version to ${{ github.event.release.tag_name }}"
           git push origin $BRANCH_NAME
 
-
-      # Step 4: Push changes and create a PR
-      - name: Create Pull Request
-        run: |
           echo "${{ secrets.TEST_DATA_PAT }}" > token.txt
 
           # Authorize GitHub CLI for the current repository and
