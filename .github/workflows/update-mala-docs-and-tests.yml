@@ -31,8 +31,10 @@ jobs:
           git checkout -b $BRANCH_NAME
 
           echo "New release version: ${{ github.event.release.tag_name }}" > version.txt
+
           git add version.txt
           git commit -m "Update version to ${{ github.event.release.tag_name }}"
+          git remote set-url origin https://github.com/pcagas/mala.git
           git push --set-upstream origin $BRANCH_NAME
 
           echo "${{ secrets.TEST_DATA_PAT }}" > token.txt
