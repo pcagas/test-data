@@ -1,0 +1,43 @@
+name: Update MALA Documentation and Tests
+
+on:
+  workflow_dispatch:
+  release:
+    types:
+      - published
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the source repository
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # Step 2: Clone the target repository
+      - name: Clone target repository
+        run: |
+          git clone https://github.com/pcagas/mala.git target-repo
+          cd target-repo
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      # Step 3: Make changes (e.g., update a file with the new release version)
+      - name: Update version
+        run: |
+          cd target-repo
+          echo "New release version: ${{ github.event.release.tag_name }}" > version.txt
+          git add version.txt
+          git commit -m "Update version to ${{ github.event.release.tag_name }}"
+
+      # Step 4: Push changes and create a PR
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.TEST_DATA_PAT }}
+          commit-message: "Update version to ${{ github.event.release.tag_name }}"
+          branch: update-version-${{ github.event.release.tag_name }}
+          title: "Update version to ${{ github.event.release.tag_name }}"
+          body: "This PR updates the version to ${{ github.event.release.tag_name }}."
+          base: main
