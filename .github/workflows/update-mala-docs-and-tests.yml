@@ -44,5 +44,5 @@ jobs:
           gh pr create \
             --body "" \
             --title "chore: update scripts to ${{ github.event.release.tag_name }}" \
-            --head "$BRANCH_NAME" \
-            --base "develop"
+            --head "origin/$BRANCH_NAME" \
+            --base "origin/develop"
