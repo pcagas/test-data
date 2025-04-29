@@ -42,6 +42,6 @@ jobs:
           gh auth login --with-token < token.txt
           gh pr create \
             --body "" \
-            --title "chore: update scripts to $LATEST_TAG" \
-            --head "$BRANCH_name" \
+            --title "chore: update scripts to ${{ github.event.release.tag_name }}" \
+            --head "$BRANCH_NAME" \
             --base "develop"
