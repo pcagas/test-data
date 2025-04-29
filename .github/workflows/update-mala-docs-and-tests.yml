@@ -27,13 +27,13 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          BRANCH_NAME="update-test-data-version-${{ github.event.release.tag_name }}"
+          BRANCH_NAME="update-test-data-version${{ github.event.release.tag_name }}"
           git checkout -b $BRANCH_NAME
 
           echo "New release version: ${{ github.event.release.tag_name }}" > version.txt
           git add version.txt
           git commit -m "Update version to ${{ github.event.release.tag_name }}"
-          git push origin $BRANCH_NAME
+          git push --set-upstream origin $BRANCH_NAME
 
           echo "${{ secrets.TEST_DATA_PAT }}" > token.txt
 
