@@ -27,7 +27,7 @@ jobs:
           BRANCH_NAME="update-test-data-version-${{ github.event.release.tag_name }}"
           git checkout -b $BRANCH_NAME
 
-          sed -i 's/'s/git checkout \b[0-9]\{1,3\}.\b[0-9]\{1,3\}.\b[0-9]\{1,3\}/git checkout ${{ github.event.release.tag_name }}/' docs/source/install/installing_mala.rst
+          sed -i 's/git checkout \b[0-9]\{1,3\}.\b[0-9]\{1,3\}.\b[0-9]\{1,3\}/git checkout ${{ github.event.release.tag_name }}/' docs/source/install/installing_mala.rst
           git add docs/source/install/installing_mala.rst
 
           git commit -m "Update 'test-data' release version to ${{ github.event.release.tag_name }}"
