@@ -28,6 +28,7 @@ jobs:
           git checkout -b $BRANCH_NAME
 
           sed -i 's/"git checkout *.*.*"/"git checkout ${{ github.event.release.tag_name }}"/' docs/source/install/installing_mala.rst
+          git add docs/source/install/installing_mala.rst
 
           git commit -m "Update 'test-data' release version to ${{ github.event.release.tag_name }}"
           git push --set-upstream origin $BRANCH_NAME
