@@ -11,15 +11,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out the source repository
       - name: Check out repository
         uses: actions/checkout@v4
 
-      # Step 2: Clone the target repository
       - name: Clone target repository
         run: |
           git clone https://github.com/pcagas/mala.git
-
           cd mala
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -27,22 +24,20 @@ jobs:
           git remote add upstream https://github.com/mala-project/mala.git
           git remote set-url origin https://${{ secrets.TEST_DATA_PAT }}@github.com/pcagas/mala.git
 
-          BRANCH_NAME="update-test-data-version${{ github.event.release.tag_name }}"
+          BRANCH_NAME="update-test-data-version-${{ github.event.release.tag_name }}"
           git checkout -b $BRANCH_NAME
 
-          echo "New release version: ${{ github.event.release.tag_name }}" > version.txt
+          sed -i 's/"git checkout *.*.*"/"git checkout ${{ github.event.release.tag_name }}"/' docs/source/installing_mala.rst
 
-          git add version.txt
-          git commit -m "Update version to ${{ github.event.release.tag_name }}"
+          git commit -m "Update 'test-data' release version to ${{ github.event.release.tag_name }}"
           git push --set-upstream origin $BRANCH_NAME
-
-          echo "${{ secrets.TEST_DATA_PAT }}" > token.txt
 
           # Authorize GitHub CLI for the current repository and
           # create a pull-requests containing the updates.
+          echo "${{ secrets.TEST_DATA_PAT }}" > token.txt
           gh auth login --with-token < token.txt
           gh pr create \
-            --title "Update ${{ github.event.release.tag_name }}" \
+            --title "Update `test-data` release version to ${{ github.event.release.tag_name }}" \
             --body "" \
             --head "$BRANCH_NAME" \
             --base "develop" \
