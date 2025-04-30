@@ -25,6 +25,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git remote add upstream https://github.com/mala-project/mala.git
+          git remote set-url origin https://${{ secrets.TEST_DATA_PAT }}@github.com/pcagas/mala.git
 
           BRANCH_NAME="update-test-data-version${{ github.event.release.tag_name }}"
           git checkout -b $BRANCH_NAME
@@ -33,7 +34,6 @@ jobs:
 
           git add version.txt
           git commit -m "Update version to ${{ github.event.release.tag_name }}"
-          git remote set-url origin https://${{ secrets.TEST_DATA_PAT }}@github.com/pcagas/mala.git
           git push --set-upstream origin $BRANCH_NAME
 
           echo "${{ secrets.TEST_DATA_PAT }}" > token.txt
@@ -42,7 +42,6 @@ jobs:
           # create a pull-requests containing the updates.
           gh auth login --with-token < token.txt
           gh pr create \
-            --body "" \
-            --title "chore: update scripts to ${{ github.event.release.tag_name }}" \
-            --head "origin/$BRANCH_NAME" \
-            --base "origin/develop"
+            --fill \
+            --head "$BRANCH_NAME" \
+            --base "develop"
