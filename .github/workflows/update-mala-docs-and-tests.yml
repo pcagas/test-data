@@ -13,8 +13,10 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: '1'
 
-      - name: Clone target repository
+      - name: Make the change and create a pull request
         run: |
           git clone https://github.com/pcagas/mala.git
           cd mala
@@ -27,7 +29,7 @@ jobs:
           BRANCH_NAME="update-test-data-version-${{ github.event.release.tag_name }}"
           git checkout -b $BRANCH_NAME
 
-          sed -i 's/git checkout \b[0-9]\{1,3\}.\b[0-9]\{1,3\}.\b[0-9]\{1,3\}/git checkout ${{ github.event.release.tag_name }}/' docs/source/install/installing_mala.rst
+          sed -i 's/git checkout \d\{1,3\}.\d\{1,3\}.\d\{1,3\}/git checkout ${{ github.event.release.tag_name }}/' docs/source/install/installing_mala.rst
           git add docs/source/install/installing_mala.rst
 
           git commit -m "Update 'test-data' release version to ${{ github.event.release.tag_name }}"
@@ -38,7 +40,7 @@ jobs:
           echo "${{ secrets.TEST_DATA_PAT }}" > token.txt
           gh auth login --with-token < token.txt
           gh pr create \
-            --title "Update `test-data` release version to ${{ github.event.release.tag_name }}" \
+            --title "Update 'test-data' release version to ${{ github.event.release.tag_name }}" \
             --body "" \
             --head "$BRANCH_NAME" \
             --base "develop" \
