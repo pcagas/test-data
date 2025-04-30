@@ -42,6 +42,7 @@ jobs:
           # create a pull-requests containing the updates.
           gh auth login --with-token < token.txt
           gh pr create \
-            --fill \
+            --title "Update ${{ github.event.release.tag_name }}" \
+            --body "" \
             --head "$BRANCH_NAME" \
             --base "develop"
