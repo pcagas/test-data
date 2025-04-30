@@ -45,4 +45,5 @@ jobs:
             --title "Update ${{ github.event.release.tag_name }}" \
             --body "" \
             --head "$BRANCH_NAME" \
-            --base "develop"
+            --base "develop" \
+            --repo pcagas/mala
